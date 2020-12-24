@@ -1,0 +1,25 @@
+library(readxl)
+Consumo <- read_excel("Con_priv.xlsx")
+View(Consumo)
+
+#Extraer variables de consumo por año
+
+aux_consumo <- Consumo[6:54]
+
+View(aux_consumo)
+
+#Rowmeans Calcula la media de cada fila del objeto indicado
+
+Mean_anual_consumo <- rowMeans(aux_consumo)
+
+
+#Separación de la columna log_IDH-1990 COMO PIB BASE
+
+consumo_base <- Consumo[5]
+
+#Graficar el IDH BASE, contra el promedio anual
+
+plot(x=consumo_base$log_con_1970,y=Mean_anual_consumo,pch=1,main = "Convergencia Absoluta \n (consumo)",xlab = "Año base 1990", ylab = "Tasa crec. cons", col="blue")
+#Seleccionar los países a estudiar con: col=ifelse(CA$`Country Code` %in% c("AUT","MEX","TGO"), 'red', 'purple')
+text(consumo_base$log_con_1970,Mean_anual_consumo,Consumo$Country_Code, col=ifelse(Consumo$Country_Code %in% c("AUT","MEX","TGO"), 'red', 'purple'),cex =ifelse(Consumo$Country_Code %in% c("AUT","MEX","TGO"), 1, 0.6) ,pos = 4)
+abline(lm(Mean_anual_consumo~consumo_base$log_con_1970), col = "green")
